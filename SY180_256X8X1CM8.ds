@@ -1,0 +1,208 @@
+/******************************************************************************
+
+             Synchronous 1 Port Register File Compiler 
+
+                   UMC 0.18um Generic Logic Process 
+   __________________________________________________________________________
+
+
+   (C) Copyright 2002-2006 Faraday Technology Corp. All Rights Reserved.
+   
+   This source code is an unpublished work belongs to Faraday Technology
+   Corp.  It is considered a trade secret and is not to be divulged or
+   used by parties who have not received written authorization from
+   Faraday Technology Corp.
+   
+   Faraday's home page can be found at:
+   http:/www.faraday-tech.com
+   __________________________________________________________________________
+   
+
+       Module Name      : SY180_256X8X1CM8
+       Words            : 256
+       Bits             : 8
+       Byte-Write       : 1
+       Aspect Ratio     : 8
+       Output Loading   : 0.01  (pf)
+       Data Slew        : 0.02  (ns)
+       CK Slew          : 0.02  (ns)
+       Power Ring Width : 10  (um)
+  ______________________________________________________________________________
+
+       Library          : FSA0A_C
+       Memaker          : 200601.3.1
+       Date             : 2008/02/28 17:31:39
+   
+******************************************************************************/
+
+
+
+   Description:
+
+     The FSA0A_C_SY is a synchronous, single port register file. It was created
+     according to UMC's 0.18um 1P4M logic process design rules and can be 
+     incorporated with Faraday's 0.18um standard cells. Different combinations 
+     of words, bits, and aspect ratios can be used to generate the most desirable
+     configurations.
+    
+     By requesting the desired size and timing constraints, the FSA0A_C_SY 
+     compiler is capable of providing suitable synchronous RAM layout instances
+     in seconds. It can automatically generate data sheets, Verilog / VHDL
+     behavioral simulation models, SCS or Viewlogic symbols, place & route models,
+     and test patterns for use in ASIC designs. The duty cycle length can be 
+     neglected as long as the setup / hold time and minimum high / low pulse
+     widths are satisfied.  This allows the flexibility of a clock falling edge
+     during each operation. Both word write and byte write operations are
+     supported.
+
+
+
+   Features:
+
+       - Synchronous read and write operations
+       - Fully customized layout density 
+       - Low active power, available for 1.35V ~ 1.98V
+       - Automatic power down to eliminate DC current
+       - Clocked address inputs and CSB to RAM at CK rising edge
+       - Clocked WEB input pin to RAM at CK rising edge
+       - Clocked DI input pins to RAM at CK rising edge
+       - Byte write or word write operations available
+       - Verilog / VHDL timing / simulation model generator
+       - SPICE netlist generator
+       - GDSII layout database
+       - Memory compiler preview UI (Memaker)
+       - BIST circuitry supported
+       - Column mux options for the best aspect ratio
+      
+
+   Input Pins:
+ 
+       Pin Name   Capacitance Descriptions
+ 
+       A[7:0]     0.008 pF    Address signals of width 8
+       CK         0.070 pF    Clock signal for addresses, WEB, CSB, and DI 
+       CSB        0.110 pF    Chip select, active low
+       WEB        0.050 pF    Write enable signals of 1 bytes, active low
+       DI[7:0]    0.007 pF    Input data of width 8
+
+
+   Output Pins: 
+
+       Pin Name   Capacitance Descriptions
+     
+       DO[7:0]    0.008 pF    Output data of width 8
+
+
+   Area Information: 
+
+       RAM area = 197.320 um (Width) x 180.160 um (Height) = 0.036 mm^2
+       RAM area = 11376 cell units in FSA0A_C
+       RAM area = 4122 equivalent Gate Count in FSA0A_C
+       Power ring width = 10 um
+
+
+   Process metal options:
+
+       
+       ------------------------------------------------------------
+       |Four (4) metal layers |  M4 (thick) + M1 ~ M3 (thin)      | 
+       |----------------------------------------------------------- 
+       |Five (5) metal layers |  M5 (thick) + M1 ~ M4 (thin)      |
+       |-----------------------------------------------------------
+       |Six  (6) metal layers |  M6 (thick) + M1 ~ M5 (thin)      |
+       |-----------------------------------------------------------
+
+
+   Recommended operating conditions:
+
+
+       Symbol	Min.	Recommended	Max.	Units
+       VCC	1.62	1.80		1.98	V
+       TJ	125	25		-40	C
+
+       Notes:
+         1. VCC: Power supply for memory block
+         2. TJ : Junction operating temperature
+
+
+
+   Operating Conditions:
+
+       Corner           Process Voltage(v)  Temperature(C) 
+       BC		PFNF	1.98		-40
+       TC		PTNT	1.8		25
+       WC		PSNS	1.62		125
+
+   Clock Slew Rate & Loading Look Up Table (5x5):
+       Index                    1      2      3      4      5
+       Clock Slew (ns)*     0.020  0.500  1.000  1.500  2.000
+       Output Loading(pF)   0.010  0.050  0.150  0.500  1.000
+
+   Clock & Data Slew Rate Look Up Table (5x5):
+       Index                    1      2      3      4      5
+       Data  Slew (ns)*     0.020  0.500  1.000  1.500  2.000
+       Clock Slew (ns)*     0.020  0.500  1.000  1.500  2.000
+
+       * 10% ~ 90%
+       
+
+   Power Consumption (Typical Condition):
+
+       Standby current =   1.000 uA (CSB = 1) 
+       DC current      =   1.000 uA (CSB = 0)
+       Max AC current  =   0.012 mA/MHz (refer to notes) 
+       Total current   = AC current * Freq + DC current   
+       Notes:
+        1. All cycles are active
+        2. All address bits switching
+        3. All data bits switching
+        4. Worst of read / write operation
+ 
+ 
+   Timing Information:
+
+       - CK input slope = 0.02 ns.
+       - Data input slope = 0.02 ns.
+       - All timing parameters are measured from 50% of input.
+       - Output reference voltage "H" = 50% of VDD, "L" = 50% of VDD.
+       - Output loading = 0.01 pF.
+       - Delay timing parameters in nano second.
+
+       symbol	BC	TC	WC
+        taa	0.87	1.28	2.25	
+        toh	0.55	0.81	1.30	
+        trc	1.16	1.71	2.74	
+        tcss	0.15	0.23	0.42	
+        tcshr	0.02	0.03	0.03	
+        tcshw	0.02	0.03	0.03	
+        twh	0.10	0.14	0.24	
+        tah	0.00	0.00	0.00	
+        tas	0.12	0.19	0.39	
+        twc	1.10	1.63	2.60	
+        tws	0.10	0.15	0.27	
+        tdh	0.04	0.06	0.10	
+        tds	0.19	0.28	0.49	
+        twdv	0.87	1.28	2.25	
+        twdx	0.55	0.81	1.30	
+        thpw	0.37	0.54	0.87	
+        tlpw	0.37	0.54	0.87	
+
+       symbol   Descriptions
+        taa     Address access time from CK rising
+        toh     Output data hold time after CK rising
+        trc     Read cycle time
+        tcss    CS setup time before CK rising
+        tcshr   CS hold time after CK rising in read cycle
+        tcshw   CS hold time after CK rising in write cycle
+        twh     WEB hold time after CK rising
+        tah     Address hold time after CK rising
+        tas     Address setup time before CK rising
+        twc     Write cycle time
+        tws     WEB setup time before CK rising
+        tdh     Input data hold time after CK rising
+        tds     Input data setup time before CK rising
+        twdv    Output data valid after CK rising
+        twdx    Output data invalid after CK rising
+        thpw    Clock high pulse width
+        tlpw    Clock low pulse width
+

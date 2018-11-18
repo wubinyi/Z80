@@ -1,0 +1,332 @@
+//===================  8-bit load group  =================== 
+47   // load: reg to reg  --4
+51   // load: reg to reg  --8
+63   // load: reg to reg  --12
+3e   // load: imm. to reg  --19
+ff
+0e   // load: imm. to reg  --26
+00
+ed   // load: reg to implied --35
+47
+26   // load: imm.(0) to reg H
+00
+7e   // load: indirect to reg  --42
+0a  // load: indirect to reg  --49
+fd  // load: index to reg     --68
+4e
+07
+3a  // load: ext. to reg      --81
+06
+00
+70 // load: reg(B) to indirect(HL) -- 88
+02 // load: reg(A) to indirect(BC) -- 95
+36 // load: imm.(11) to indirect(HL) --105
+11
+46 // load: indirect(HL) to reg(B)   --112
+fd // load: reg(C) to index(IY+d[00]) --131
+71
+00
+32 // load: reg(A) to ext.(0001)   --144
+01
+00
+fd // load: imm.(0a) to index(IY+03)  --163
+36
+03
+0a
+//===================  16-bit load push pop  ===================
+f9 // 16-bit load: HL to SP  --169
+dd // 16-bit load: IX to SP  --179
+f9 
+21 // 16-bit load: imm.(0201) to HL --189
+01
+02
+dd // 16-bit load: imm.(0201) to IX --203
+21
+01
+02
+2a // 16-bit load: ext.(mem:0008) to HL --223
+08
+00
+ed // 16-bit load: ext.(mem:0003) to SP --243
+7b
+03
+00
+22 // 16-bit load: HL to ext.(mem:0000) --259
+00
+00
+dd // 16-bit load: IX to ext.(mem:0000) --279
+22
+00
+00
+31 // 16-bit load: imm.(000b) to SP  --289
+0b
+00
+c5 // push BC to (sp)       --300
+c1 // pop (sp) to BC        --310
+dd // push IX to (sp)       --325
+e5
+fd // pop (sp) to IY        --339
+e1
+d9 // exchange BC_DE_HL     --343
+dd // exchange IX and (SP)  --366
+e3
+//===================  8-bit alu  ===================
+// the instructions(32) above's excute time is 254 clock
+// the original numberof clocks needed is 366
+// the instruction below are all about arithmetic
+81 // add: a = a + c
+90 // sub: a = a - b
+a5 // and: a = a & l
+bc // cp:  a - h
+1d // dec: e = e - 1
+26 // load: imm.(00) to reg(H)
+00
+86 // add: a = a + (HL)
+34 // inc: (HL) = (HL) + 1
+dd // 16-bit load: ext.(0c) to IX
+2a
+0c
+00
+dd // or: a = a | (IX+3)
+b6
+03
+dd // dec: (IX+5) = (IX+5) - 1
+35
+05
+de // sbc: a = a - imm.(0d)
+0d
+//===================  16-bit alu  ===================
+//  16-bit arithmetic
+39 // add: HL = HL + SP
+dd // add: IX = IX + IX
+29
+fd // add: IY = IY + BC
+09
+ed // adc: HL = HL + BC + C
+4a
+ed // sbc: HL = HL - DE - C
+52 
+13 // DE = DE + 1
+dd // IX = IX + 1
+23
+0b // BC = BC - 1
+fd // IY = IY - 1
+2b
+//===================  AF  ===================
+//  AF operation
+2f // cpl
+3f // ccf
+37 // scf
+ed // neg
+44 // 
+3E // imm.(06) to reg A
+06
+32 // reg A to ext.(0007)
+07
+00
+3E // imm.(01) to reg A
+01
+//===================  rotate and shift  ===================
+// rotates and shift
+07 // rlca
+1f // rra
+cb // rlc: B
+00
+cb // rrc: C
+09
+cb // rl: D
+12
+cb // rr: E
+1b
+cb // sla: H
+24
+cb // sra: L
+2d
+cb // srl: A
+3f
+21 // 16-bit load: imm.(0008) to HL
+08
+00
+cb // rr: (HL)
+1e
+fd // 16-bit load: imm.(000a) to IY
+21
+0a
+00
+dd // rl: (IX+0)
+cb
+00
+16
+fd // sla: (IY+0)
+cb
+00
+26
+ed // rld
+6f
+ed // rrd
+67 
+//===================  bit manipualtion  ===================
+// bit manipualtion
+cb // test A's bit 0
+47
+cb // set H's bit 1
+cc
+cb // reset C's bit 7
+b9
+cb // reset H's bit 1
+8c
+cb // test (HL)'s bit 0
+46
+cb // reset (HL)'s bit 2
+96
+cb // set (HL)'s bit 2
+d6
+dd // test (IX+2)'s bit 6
+cb
+02
+76
+fd // reset (IY+0)'s bit 2
+cb
+00
+96
+dd // set (IX+4)'s bit 7
+cb
+04
+fe
+//===================  jump call return  ===================
+// jump @181(b5)
+2e // load: imm.(be[190]) to reg L
+be 
+e9 // jump (HL)
+dd // load 16bit imm.(202) to IX
+21
+ca
+00
+// @ 188
+dd // jump (IX)[188+14]
+e9
+// @[be]190 
+18 // jump pc+02
+02
+//@ c0(192)
+38 // jump carry pc+02  
+02
+10 // jump djnz pc+03
+03
+// @ c4(196)
+d2 // jump none-carry to imm.(184)(b8)
+b8 
+00
+// @ 199
+ca // jump zero to imm.(199-7=192)[c0]
+c0
+00
+// @ 202
+f4 // call: jump sign-pos to imm.(202+6=208) and push PC
+d0
+00
+09 // 16bit add: HL = HL + BC
+18 // jump pc+02
+02
+// @208
+39 // 16bit add: HL = HL + SP
+f0 // return: sign-pos pop PC
+// use for correct
+3E // imm.(c4) to reg A
+c4
+32 // reg A to ext.(0009)
+09
+00
+3E // imm.(00) to reg A
+00
+2e // imm.(be) to reg L
+be
+dd // imm.(00c1) to reg IX
+21
+c1
+00
+// mem[201] use only to test one times
+// ff // rst 0038h(56)
+//===================  input  ===================
+// input
+db // input from imm. extend(0000) to A
+00
+ed // input from reg ind.(B_C:0000) to C
+48
+43 // load E to B
+6a // load D to L
+ed // INI
+a2
+ed // INIR
+b2
+43 // load E to B
+ed // IND
+aa
+ed // INDR
+ba
+//===================  output  ===================
+// output
+d3 // output from A to imm. extend(ff00)
+00
+ed // output from D to imm. extend(ff00)
+51 
+43 // load E to B
+ed // OUTI
+a3
+ed // OTIR
+b3
+43 // load E to B
+6a // load D to L
+ed // OUTD
+ab
+43 // load E to B
+ed // OTDR
+bb
+//===================  block transfer group  ===================
+0e // load imm.(03) to C   ===> BC:0003
+03
+11 // load imm.(0007) to DE  ===> DE:0007
+07
+00
+ed // LDI
+a0
+ed // LDIR
+b0
+0e // load imm.(03) to C   ===> BC:0003
+03
+21 // load imm.(0003) to HL  ===> HL:0003
+03
+00
+ed // LDD 
+a8
+ed // LDDR
+b8
+//===================  block search group  ===================
+0e // load imm.(03) to C   ===> BC:0003
+03
+ed // CPI
+a1
+ed // CPIR
+b1 
+3e // load imm.(02) to A
+02
+0e // load imm.(03) to C   ===> BC:0003
+03
+ed // CPD
+a9
+ed // CPDR
+b9 
+// CPU control  
+00 // nop
+//mem[265]<= 8'hfb // eint
+//mem[266]<= 8'hf3 // dint
+f3 // dint
+fb // eint
+ed // 5e:im2  56:im1
+5e 
+//mem[269]<= 8'h76 // halt
+ed // load I to A
+57
+// test int mode 2  
+ed // ldir
+b0
